@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'diaryEntry.dart';
-class DiaryPage extends StatelessWidget {
 
+class DiaryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    DateTime now = DateTime.now();
+    int _year = now.year;
+    int _month = now.month;
+    int _day = now.day;
+
     return Scaffold(appBar: AppBar( 
       backgroundColor: Color.fromARGB(82, 99, 224, 222),
       leading: Text("button"),
@@ -15,23 +20,9 @@ class DiaryPage extends StatelessWidget {
       children:<Widget>[
         Card(
           child: ListTile(
-            leading:Text('年/月'),
-            title: Text('日'),
+            leading:Text('$_year/$_month'),
+            title: Text('$_day'),
             subtitle: Text('日記内容'),
-            onLongPress: (){
-              Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => diaryEntryPage()));
-            },
-          ),
-        ),
-        Card(
-          child: ListTile(
-            leading:Text('年/月'),
-            title: Text('日'),
-            subtitle: Text('日記内容'),  
-          // 長押ししたら編集できるようにする
             onLongPress: (){
               Navigator.push(
             context,
