@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class diaryEntryPage extends StatelessWidget {
+class diary_DetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     DateTime now = DateTime.now();
