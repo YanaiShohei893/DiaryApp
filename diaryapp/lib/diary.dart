@@ -8,18 +8,22 @@ class DiaryPage extends StatefulWidget {
 }
 
 class _DiaryPageState extends State<DiaryPage> {
+  DateTime now = DateTime.now();
   List<String> diaryes = [];
+  List<int> Y = [];
   List<int> M = [];
   List<int> D = [];
   @override
   Widget build(BuildContext context) {
+    int diaryYear = now.year;
+    int diaryMonth = now.month;
+    int diaryDay = now.day;
     return Scaffold(appBar: AppBar( 
       backgroundColor: Color.fromARGB(82, 99, 224, 222),
       leading: Text("button"),
       centerTitle: true,
       title: Text("Diary"),
       actions: [
-        Text("action1"),
         IconButton(
           icon: Icon(Icons.check_circle),
           onPressed:() {}
@@ -31,13 +35,28 @@ class _DiaryPageState extends State<DiaryPage> {
       itemBuilder: (context,index) {
         return Card(
           child: ListTile(
-            leading: Text(M[index].toString() + '/' ),
-            title: Text(diaryes[index]),
+            leading: Text(Y[index].toString() + '年/' + M[index].toString() + '月'),
+            title: Text(D[index].toString() + '日'),
+            subtitle: Text(diaryes[index]),
+            onLongPress:() async {
+              final newListText = await Navigator.of(context).push(
+                MaterialPageRoute(builder:(context) {
+                  return diary_DetailPage();
+                })
+              );
+              if (newListText != null) {
+                setState(() {
+                  diaryes[index] = newListText;
+                });
+              }
+            },
             trailing: IconButton(
               onPressed:(){
                 setState(() {
                   diaryes.removeAt(index);
+                  Y.removeAt(index);
                   M.removeAt(index);
+                  D.removeAt(index);
                 });
               },
               icon: Icon(Icons.delete),
@@ -75,7 +94,9 @@ class _DiaryPageState extends State<DiaryPage> {
         if (newListText != null) {
           setState(() {
             diaryes.add(newListText);
-            M.add(newListText);
+            Y.add(diaryYear);
+            M.add(diaryMonth);
+            D.add(diaryDay);
           });
         }
       },

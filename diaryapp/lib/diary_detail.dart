@@ -1,3 +1,4 @@
+import 'package:diaryapp/diary.dart';
 import 'package:flutter/material.dart';
 
 class diary_DetailPage extends StatefulWidget {
@@ -7,10 +8,10 @@ class diary_DetailPage extends StatefulWidget {
 
 class _diary_DetailPage extends State<diary_DetailPage> {
   String _text = '';
-  int _month = 0;
+  DateTime now = DateTime.now();
+  
   @override
   Widget build(BuildContext context) {
-    DateTime now = DateTime.now();
     int year = now.year;
     int month = now.month;
     int day = now.day;
@@ -23,8 +24,6 @@ class _diary_DetailPage extends State<diary_DetailPage> {
       ElevatedButton(
         onPressed: _text.length == 0 ? null : (){
           Navigator.of(context).pop(_text);
-          Navigator.of(context).pop(_month);
-          // Navigator.of(context).pop(_day);
         },
         child:Text('保存')
       ),
@@ -39,7 +38,6 @@ class _diary_DetailPage extends State<diary_DetailPage> {
             onChanged: (String value) {
               setState(() {
                 _text = value;
-                _month = month;
               });
             },
             keyboardType: TextInputType.multiline,
