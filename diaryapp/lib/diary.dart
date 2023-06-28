@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'diary_detail.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 //日記一覧画面
 class DiaryPage extends StatefulWidget {
@@ -8,12 +9,37 @@ class DiaryPage extends StatefulWidget {
 }
 
 class _DiaryPageState extends State<DiaryPage> {
+  late SharedPreferences _prefs;
+  List<String> diaryEntries = [];
   DateTime now = DateTime.now();
   List<String> diaryes = [];
   List<int> Y = [];
   List<int> M = [];
   List<int> D = [];
   @override
+  void initState() {
+    super.initState();
+    loadEntries();
+  }
+
+  Future<void> loadEntries() async {
+    _prefs = await SharedPreferences.getInstance();
+    setState(() {
+      diaryEntries = _prefs.getStringList('diaryEntries') ?? [];
+    });
+  }
+  
+  Future<void> saveEntries() async {
+    await _prefs.setStringList('diaryEntries',diaryEntries);
+  }
+
+  void addEntry(String entry) {
+    setState(() {
+      diaryEntries.add(entry);
+      saveEntries();
+    });
+  }
+
   Widget build(BuildContext context) {
     int diaryYear = now.year;
     int diaryMonth = now.month;
@@ -31,13 +57,13 @@ class _DiaryPageState extends State<DiaryPage> {
         ],
     ),
     body: ListView.builder(
-      itemCount: diaryes.length,
+      itemCount: diaryEntries.length,
       itemBuilder: (context,index) {
         return Card(
           child: ListTile(
             leading: Text(Y[index].toString() + '年/' + M[index].toString() + '月'),
             title: Text(D[index].toString() + '日'),
-            subtitle: Text(diaryes[index]),
+            subtitle: Text(diaryEntries[index]),
             onLongPress:() async {
               final newListText = await Navigator.of(context).push(
                 MaterialPageRoute(builder:(context) {
@@ -46,14 +72,14 @@ class _DiaryPageState extends State<DiaryPage> {
               );
               if (newListText != null) {
                 setState(() {
-                  diaryes[index] = newListText;
+                  diaryEntries[index] = newListText;
                 });
               }
             },
             trailing: IconButton(
               onPressed:(){
                 setState(() {
-                  diaryes.removeAt(index);
+                  diaryEntries.removeAt(index);
                   Y.removeAt(index);
                   M.removeAt(index);
                   D.removeAt(index);
@@ -93,7 +119,7 @@ class _DiaryPageState extends State<DiaryPage> {
         );
         if (newListText != null) {
           setState(() {
-            diaryes.add(newListText);
+            diaryEntries.add(newListText);
             Y.add(diaryYear);
             M.add(diaryMonth);
             D.add(diaryDay);
